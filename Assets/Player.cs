@@ -21,4 +21,13 @@ public class Player : MonoBehaviour {
             transform.position = new Vector3(-BoundaryRadius, transform.position.y, transform.position.z);
         }
 	}
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Obstacle")
+        {
+            GameMaster.Instance.SlowDown();
+            Destroy(other.gameObject);
+        }
+    }
 }
