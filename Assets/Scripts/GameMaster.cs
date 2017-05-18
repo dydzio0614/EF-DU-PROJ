@@ -23,9 +23,28 @@ public class GameMaster : MonoBehaviour {
     [SerializeField]
     private float MaxSpeed = -0.3f;
 
+    private float MaxTimeWithoutEating = 15f;
+    private float FoodTimeExtension = 1.5f;
+
+    private float RemainingTime;
+
     void Start()
     {
         WorldSpeed = MaxSpeed;
+
+        RemainingTime = MaxTimeWithoutEating;
+    }
+
+    void Update()
+    {
+        Debug.Log(RemainingTime);
+        RemainingTime -= Time.deltaTime;
+        
+        if (RemainingTime <= 0)
+        {
+            Time.timeScale = 0.0f;
+            Debug.Log("GAME OVER!");
+        }
     }
 
     public void SlowDown()
@@ -40,5 +59,10 @@ public class GameMaster : MonoBehaviour {
     private void SpeedUp()
     {
         WorldSpeed = MaxSpeed;
+    }
+
+    public void GainPower()
+    {
+        RemainingTime += FoodTimeExtension;
     }
 }

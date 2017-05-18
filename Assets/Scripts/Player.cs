@@ -27,7 +27,11 @@ public class Player : MonoBehaviour {
         if (other.tag == "Obstacle")
         {
             GameMaster.Instance.SlowDown();
-            Destroy(other.gameObject);
         }
+        else if(other.tag == "Food")
+        {
+            GameMaster.Instance.GainPower();
+        }
+        Destroy(other.gameObject);
     }
 }
