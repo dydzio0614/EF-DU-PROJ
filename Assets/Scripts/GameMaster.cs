@@ -26,7 +26,9 @@ public class GameMaster : MonoBehaviour {
     private float MaxTimeWithoutEating = 15f;
     private float FoodTimeExtension = 1.5f;
 
-    private float RemainingTime;
+    public float RemainingTime { get; set; }
+
+    public int Points { get; set; }
 
     void Start()
     {

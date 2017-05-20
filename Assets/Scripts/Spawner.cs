@@ -6,34 +6,43 @@ public class Spawner : MonoBehaviour {
     private GameObject[] Obstacles;
     [SerializeField]
     private GameObject[] Food;
+    [SerializeField]
+    private GameObject QuestionMark;
 
     [SerializeField]
     private float SpawnCycle = 0.5f;
 
     private float TimeElapsed;
 
-    private bool SpawnFood = true;
+    private enum ObjectToSpawn { FOOD, OBSTACLE, QUESTION };
+    int NextObject = 0;
 	
 	void Update ()
     {
         TimeElapsed += Time.deltaTime;
         if(TimeElapsed > SpawnCycle)
         {
-            if (SpawnFood)
+            switch ((ObjectToSpawn)NextObject)
             {
-                GameObject temp = Instantiate(Food[Random.Range(0, Food.Length)]);
-                Vector3 pos = temp.transform.position;
-                temp.transform.position = new Vector3(Random.Range(-3, 4), pos.y, pos.z);
+                case ObjectToSpawn.FOOD:
+                    SpawnAndPlace(Food[Random.Range(0, Food.Length)]);
+                    break;
+                case ObjectToSpawn.OBSTACLE:
+                    SpawnAndPlace(Obstacles[Random.Range(0, Obstacles.Length)]);
+                    break;
+                case ObjectToSpawn.QUESTION:
+                    SpawnAndPlace(QuestionMark);
+                    break;
             }
-            else
-            {
-                GameObject temp = Instantiate(Obstacles[Random.Range(0, Obstacles.Length)]);
-                Vector3 pos = temp.transform.position;
-                temp.transform.position = new Vector3(Random.Range(-3, 4), pos.y, pos.z);
-            }
-            SpawnFood = !SpawnFood;
+            NextObject = (NextObject + 1) % 3;
 
             TimeElapsed -= SpawnCycle;
         }
+    }
+
+    void SpawnAndPlace(GameObject prefab)
+    {
+        GameObject temp = Instantiate(prefab);
+        temp.transform.position = new Vector3(Random.Range(-3, 4), temp.transform.position.y, temp.transform.position.z);
     }
 }
