@@ -1,19 +1,23 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GameMaster : MonoBehaviour {
 
-    private static GameMaster instance;
+    private static GameMaster _Instance;
     public static GameMaster Instance
     {
         get
         {
-            if (instance == null)
+            if (_Instance == null)
             {
-                instance = FindObjectOfType<GameMaster>();
+                _Instance = FindObjectOfType<GameMaster>();
             }
-            return instance;
+            return _Instance;
         }
     }
+
+    [SerializeField]
+    private GameObject Player;
 
     public float WorldSpeed { get; private set; }
     private float CurrentSpeed;
@@ -26,20 +30,48 @@ public class GameMaster : MonoBehaviour {
     private float MaxTimeWithoutEating = 15f;
     private float FoodTimeExtension = 1.5f;
 
-    public float RemainingTime { get; set; }
+    [SerializeField]
+    private RectTransform StatusBar;
 
-    public int Points { get; set; }
+    private float _RemainingTime;
+    public float RemainingTime
+    {
+        get
+        {
+            return _RemainingTime;
+        }
+        set
+        {
+            _RemainingTime = value;
+            StatusBar.localScale = new Vector3(_RemainingTime / MaxTimeWithoutEating, StatusBar.localScale.y, StatusBar.localScale.z);
+        }
+    }
+
+    [SerializeField]
+    private Text PointsText;
+
+    private int _Points;
+    public int Points
+    {
+        get
+        {
+            return _Points;
+        }
+        set
+        {
+            _Points = value;
+            PointsText.text = _Points.ToString();
+        }
+    }
 
     void Start()
     {
         WorldSpeed = MaxSpeed;
-
         RemainingTime = MaxTimeWithoutEating;
     }
 
     void Update()
     {
-        Debug.Log(RemainingTime);
         RemainingTime -= Time.deltaTime;
         
         if (RemainingTime <= 0)
@@ -54,6 +86,7 @@ public class GameMaster : MonoBehaviour {
         CancelInvoke("SpeedUp");
 
         WorldSpeed = MinSpeed;
+        Player.GetComponent<Animator>().SetBool("tripped", true);
 
         Invoke("SpeedUp", 1f);
     }
@@ -61,6 +94,7 @@ public class GameMaster : MonoBehaviour {
     private void SpeedUp()
     {
         WorldSpeed = MaxSpeed;
+        Player.GetComponent<Animator>().SetBool("tripped", false);
     }
 
     public void GainPower()
