@@ -64,8 +64,15 @@ public class GameMaster : MonoBehaviour {
         }
     }
 
+
+    [SerializeField]
+    private GameObject PlayerInfoUI;
+    [SerializeField]
+    private GameObject GameOverUI;
+
     void Start()
     {
+        Time.timeScale = 1.0f;
         WorldSpeed = MaxSpeed;
         RemainingTime = MaxTimeWithoutEating;
     }
@@ -77,7 +84,7 @@ public class GameMaster : MonoBehaviour {
         if (RemainingTime <= 0)
         {
             Time.timeScale = 0.0f;
-            Debug.Log("GAME OVER!");
+            GameOver();
         }
     }
 
@@ -100,5 +107,11 @@ public class GameMaster : MonoBehaviour {
     public void GainPower()
     {
         RemainingTime += FoodTimeExtension;
+    }
+
+    private void GameOver()
+    {
+        PlayerInfoUI.SetActive(false);
+        GameOverUI.SetActive(true);
     }
 }
