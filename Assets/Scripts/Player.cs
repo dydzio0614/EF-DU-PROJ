@@ -8,6 +8,8 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private float BoundaryRadius = 3;
 
+    private float ObstacleTimeLoss = 1.0f;
+
 	void Update ()
     {
         transform.Translate(Input.GetAxis("Horizontal") * Time.deltaTime * DivertSpeed, 0f, 0f);
@@ -27,6 +29,7 @@ public class Player : MonoBehaviour {
         if (other.tag == "Obstacle")
         {
             GameMaster.Instance.SlowDown();
+            GameMaster.Instance.GainPower(-ObstacleTimeLoss);
             Destroy(other.gameObject);
         }
         else if(other.tag == "Food")

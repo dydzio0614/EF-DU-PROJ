@@ -16,6 +16,7 @@ public class Question : MonoBehaviour
     private Operation NextOperation;
     private int Num1, Num2, Result;
     private int CorrectButtonIndex;
+    private float CorrectAnswerTimeExtension = 2.0f;
 
     void OnTriggerEnter(Collider other)
     {
@@ -67,7 +68,7 @@ public class Question : MonoBehaviour
     private void CorrectAnswer()
     {
         GameMaster.Instance.Points++;
-        GameMaster.Instance.RemainingTime += 2f;
+        GameMaster.Instance.GainPower(CorrectAnswerTimeExtension);
         Return();
     }
 
@@ -85,8 +86,9 @@ public class Question : MonoBehaviour
 
     private int RandomExcept(int min, int max, int except)
     {
-        int random = Random.Range(min, max);
-        if (random >= except) random = (random + 1) % max;
-        return random;
+        int random;
+        while (true)
+            if ((random = Random.Range(min, max)) != except)
+                return random;
     }
 }

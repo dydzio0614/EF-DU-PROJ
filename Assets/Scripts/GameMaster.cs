@@ -23,9 +23,9 @@ public class GameMaster : MonoBehaviour {
     private float CurrentSpeed;
 
     [SerializeField]
-    private float MinSpeed = -0.15f;
+    private float MinSpeed = 0.15f;
     [SerializeField]
-    private float MaxSpeed = -0.3f;
+    private float MaxSpeed = 0.3f;
 
     private float MaxTimeWithoutEating = 15f;
     private float FoodTimeExtension = 1.5f;
@@ -104,9 +104,16 @@ public class GameMaster : MonoBehaviour {
         Player.GetComponent<Animator>().SetBool("tripped", false);
     }
 
+    
+    public void GainPower(float amount)
+    {
+        if ((RemainingTime += amount) > MaxTimeWithoutEating)
+            RemainingTime = MaxTimeWithoutEating;
+    }
+
     public void GainPower()
     {
-        RemainingTime += FoodTimeExtension;
+        GainPower(FoodTimeExtension);
     }
 
     private void GameOver()
