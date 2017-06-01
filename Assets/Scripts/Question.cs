@@ -11,13 +11,18 @@ public class Question : MonoBehaviour
     private Text QuestionLabel;
 
     [SerializeField]
+    private Text QuestionTimer;
+
+    [SerializeField]
     private Button[] AnswerButtons;
 
     private enum Operation { ADD, SUB, MUL, DIV }
     private Operation NextOperation;
     private int Num1, Num2, Result;
     private int CorrectButtonIndex;
-    private float CorrectAnswerTimeExtension = 2.0f;
+    private float CorrectAnswerTimeExtension = 2f;
+    private float TimeLimit;
+    private bool startTimer = false;
 
     void OnTriggerEnter(Collider other)
     {
@@ -26,6 +31,18 @@ public class Question : MonoBehaviour
             Time.timeScale = 0.0f;
             QuestionUI.SetActive(true);
             PickQuestion();
+            startTimer = true;
+        }
+    }
+
+    private void Update()
+    {
+        if (startTimer)
+        {   
+            TimeLimit -= Time.unscaledDeltaTime;
+            QuestionTimer.text = System.TimeSpan.FromSeconds(TimeLimit).ToString();
+            if (TimeLimit <= 0)
+                BadAnswer();
         }
     }
 
@@ -37,11 +54,13 @@ public class Question : MonoBehaviour
         {
             Num1 = Random.Range(0, 100);
             Num2 = Random.Range(0, 100);
+            TimeLimit = 10f;
         }
         else if (NextOperation == Operation.MUL)
         {
             Num1 = Random.Range(3, 20);
             Num2 = Random.Range(6, 20);
+            TimeLimit = 15f;
         }
         else if (NextOperation == Operation.DIV)
         {
@@ -54,6 +73,7 @@ public class Question : MonoBehaviour
                         validDividers.Add(i);
             }
             Num2 = validDividers[Random.Range(0, validDividers.Count)];
+            TimeLimit = 20f;
         }
         else
             Debug.Log("Invalid math operation specified!");
