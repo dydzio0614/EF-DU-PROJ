@@ -29,6 +29,7 @@ public class Question : MonoBehaviour
         if (other.tag == "Player")
         {
             Time.timeScale = 0.0f;
+            transform.GetChild(0).gameObject.SetActive(false);
             QuestionUI.SetActive(true);
             PickQuestion();
             startTimer = true;
@@ -40,7 +41,7 @@ public class Question : MonoBehaviour
         if (startTimer)
         {   
             TimeLimit -= Time.unscaledDeltaTime;
-            QuestionTimer.text = System.TimeSpan.FromSeconds(TimeLimit).ToString();
+            QuestionTimer.text = (TimeLimit % 60 - TimeLimit % 0.1).ToString();
             if (TimeLimit <= 0)
                 BadAnswer();
         }
