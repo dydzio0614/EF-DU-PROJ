@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Question : MonoBehaviour
@@ -12,7 +13,7 @@ public class Question : MonoBehaviour
     [SerializeField]
     private Button[] AnswerButtons;
 
-    private enum Operation { ADD, SUB }
+    private enum Operation { ADD, SUB, MUL, DIV }
     private Operation NextOperation;
     private int Num1, Num2, Result;
     private int CorrectButtonIndex;
@@ -30,10 +31,32 @@ public class Question : MonoBehaviour
 
     private void PickQuestion()
     {
-        Num1 = Random.Range(0, 100);
-        Num2 = Random.Range(0, 100);
+        NextOperation = (Operation)Random.Range(0, 4);
 
-        NextOperation = (Operation)Random.Range(0, 2);
+        if (NextOperation == Operation.ADD || NextOperation == Operation.SUB)
+        {
+            Num1 = Random.Range(0, 100);
+            Num2 = Random.Range(0, 100);
+        }
+        else if (NextOperation == Operation.MUL)
+        {
+            Num1 = Random.Range(3, 20);
+            Num2 = Random.Range(6, 20);
+        }
+        else if (NextOperation == Operation.DIV)
+        {
+            List<int> validDividers = new List<int>();
+            while (validDividers.Count == 0) //if no valid dividers, try another num1
+            {
+                Num1 = Random.Range(45, 200);
+                for (int i = 4; i < 15; i++) //Num2 = Random.Range(4,15) with validity check
+                    if (Num1 % i == 0)
+                        validDividers.Add(i);
+            }
+            Num2 = validDividers[Random.Range(0, validDividers.Count)];
+        }
+        else
+            Debug.Log("Invalid math operation specified!");
 
         switch (NextOperation)
         {
@@ -44,6 +67,14 @@ public class Question : MonoBehaviour
             case Operation.SUB:
                 Result = Num1 - Num2;
                 QuestionLabel.text = Num1 + " - " + Num2;
+                break;
+            case Operation.MUL:
+                Result = Num1 * Num2;
+                QuestionLabel.text = Num1 + " * " + Num2;
+                break;
+            case Operation.DIV:
+                Result = Num1 / Num2;
+                QuestionLabel.text = Num1 + " / " + Num2;
                 break;
         }
 
