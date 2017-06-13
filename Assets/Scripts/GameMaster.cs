@@ -64,7 +64,6 @@ public class GameMaster : MonoBehaviour {
         }
     }
 
-
     [SerializeField]
     private GameObject PlayerInfoUI;
     [SerializeField]
@@ -118,7 +117,18 @@ public class GameMaster : MonoBehaviour {
 
     private void GameOver()
     {
+        SaveScore();
         PlayerInfoUI.SetActive(false);
         GameOverUI.SetActive(true);
+    }
+
+    private void SaveScore()
+    {
+        if (PlayerPrefs.GetInt("HighScore") < Instance.Points)
+        {
+            PlayerPrefs.SetInt("HighScore", Instance.Points);
+        }
+        PlayerPrefs.Save();
+        PlayerPrefs.SetInt("Score", Instance.Points);
     }
 }
